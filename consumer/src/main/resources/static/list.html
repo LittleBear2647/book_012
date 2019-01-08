@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            ajaxData(1);
+        });
+
+        function ajaxData(pageNo) {
+            var title = $("[name=title]").val();
+            var categoryId = $("[name=categoryId]").val();
+            $.ajax({
+                url: "findAll.do",
+                type: "post",
+                data: {"pageNo": pageNo, "title": title, "categoryId": categoryId},
+                dataType: "json",
+                success: function (obj) {
+                    $(".info").remove();
+                    var str = "";
+                    $.each(obj.list, function (i) {
+                        str += "<tr class='info'>";
+                        str += "    <td>" + obj.list[i].id + "</td>";
+                        str += "    <td>" + obj.list[i].title + "</td>";
+                        str += "    <td>" + obj.list[i].summary + "</td>";
+                        str += "    <td>" + obj.list[i].author + "</td>";
+                        str += "    <td>" + obj.list[i].createDate + "</td>";
+                        /*str +="    <td>操作</td>";*/
+                        str += "</tr>";
+                    })
+                    str += "<tr class='info'>";
+                    str += "    <td colspan='6'>";
+                    str += "        <a href='javascript:void(0)' onclick='ajaxData(1)'>首页</a>";
+                    str += "        <a href='javascript:void(0)' onclick='ajaxData(" + obj.prePage + ")'>上一页</a>";
+                    str += "        <a href='javascript:void(0)' onclick='ajaxData(" + obj.nextPage + ")'>下一页</a>";
+                    str += "        <a href='javascript:void(0)' onclick='ajaxData(" + obj.lastPage + ")'>尾页</a>";
+                    str += "第" + obj.pageNum + "页/共" + obj.lastPage + "页(共" + obj.total + "条信息)";
+                    str += "    </td>";
+                    str += "</tr>";
+
+                    $("table").append(str);
+
+
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+<form>
+    <span>
+        新闻分类：
+        <select name="categoryId">
+            <option value="">全部</option>
+        </select>
+        新闻标题：
+        <input type="text" name="title"/>
+        <input type="button" value="查询" onclick="ajaxData()"/>
+    </span>
+</form>
+<table border="1px">
+    <tr>
+        <td>标题</td>
+        <td>新闻标题</td>
+        <td>新闻摘要</td>
+        <td>作者</td>
+        <td>创建时间</td>
+        <td>操作</td>
+    </tr>
+    <!--<tr>
+        <td>"+obj.list[i].id+"</td>
+        <td>"+obj.list[i].title+"</td>
+        <td>"+obj.list[i].summary+"</td>
+        <td>"+obj.list[i].author+"</td>
+        <td>"+obj.list[i].createDate+"</td>
+        <td>操作</td>
+    </tr>-->
+    <!--<tr>-->
+    <!--<td>-->
+    <!--<a href='javascript:void(0)' onclick='ajaxData(1)'>首页</a>-->
+    <!--<a href='javascript:void(0)' onclick='ajaxData("+obj.prePage+")'>上一页</a>-->
+    <!--<a href='javascript:void(0)' onclick='ajaxData("+obj.nextPage+")'>下一页</a>-->
+    <!--<a href='javascript:void(0)' onclick='ajaxData("+obj.lastPage+")'>尾页</a>-->
+    <!--第"+obj.pageNum+"页/共"+obj.lastPage+"页(共"+obj.totle+"条信息)-->
+    <!--</td>-->
+    <!--</tr>-->
+</table>
+</body>
+</html>
